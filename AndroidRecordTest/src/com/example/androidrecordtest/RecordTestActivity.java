@@ -31,7 +31,7 @@ public class RecordTestActivity extends Activity {
     //private PlayButton   mPlayButton = null;
     private MediaPlayer   mPlayer = null;
 
-    private void onRecord(boolean start) {
+    /*private void onRecord(boolean start) {
         if (start) {
             startRecording();
         } else {
@@ -45,9 +45,12 @@ public class RecordTestActivity extends Activity {
         } else {
             stopPlaying();
         }
-    }
+    }*/
 
     private void startPlaying() {
+    	if(mPlayer != null) {
+    		stopPlaying();
+    	}
         mPlayer = new MediaPlayer();
         try {
             mPlayer.setDataSource(mFileName);
@@ -64,28 +67,41 @@ public class RecordTestActivity extends Activity {
     }
 
     private void startRecording() {
-        mRecorder = new MediaRecorder();
-        mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-        mRecorder.setOutputFile(mFileName);
-        mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+    	if(isRecording)
+    		return;
+    	
+    	if(mRecorder == null) {
+            mRecorder = new MediaRecorder();
+            mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+            mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+            mRecorder.setOutputFile(mFileName);
+            mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+    	}
 
         try {
+        	Log.v("", "before praparing");
             mRecorder.prepare();
+            Log.v("", "before starting");
+            mRecorder.start();
+            Log.v("", "Started");
         } catch (IOException e) {
             Log.e(LOG_TAG, "prepare() failed");
         }
-
-        mRecorder.start();
     }
 
     private void stopRecording() {
-        mRecorder.stop();
-        mRecorder.release();
-        mRecorder = null;
+    	try {
+	        mRecorder.stop();
+	        mRecorder.release();
+	        mRecorder = null;
+    	}
+    	catch (Exception e) {
+    		Log.e("Record Stop", "Shit, can't stop recording.");
+    		e.printStackTrace();
+    	}
     }
 
-    class RecordButton extends Button {
+    /*class RecordButton extends Button {
         boolean mStartRecording = true;
 
         OnClickListener clicker = new OnClickListener() {
@@ -105,9 +121,9 @@ public class RecordTestActivity extends Activity {
             setText("Start recording");
             setOnClickListener(clicker);
         }
-    }
+    }*/
 
-    class PlayButton extends Button {
+    /*class PlayButton extends Button {
         boolean mStartPlaying = true;
 
         OnClickListener clicker = new OnClickListener() {
@@ -127,7 +143,7 @@ public class RecordTestActivity extends Activity {
             setText("Start playing");
             setOnClickListener(clicker);
         }
-    }
+    }*/
 
     public RecordTestActivity() {
         mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
@@ -165,8 +181,8 @@ public class RecordTestActivity extends Activity {
 	                else if (action == KeyEvent.ACTION_UP) {
 	                	stopRecording();
 	                	isRecording = false;
-	                	isPlaying = true;
 	                	startPlaying();
+	                	isPlaying = true;
 	                }
 	                return true;
 	           
