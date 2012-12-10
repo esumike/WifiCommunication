@@ -9,22 +9,26 @@ import android.os.Environment;
 import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 public class RecordTestActivity extends Activity {
 
 	private static final String LOG_TAG = "AudioRecordTest";
     private static String mFileName = null;
+    private boolean isRecording = false;
+    private boolean isPlaying = false;
 
-    private RecordButton mRecordButton = null;
+    //private RecordButton mRecordButton = null;
     private MediaRecorder mRecorder = null;
 
-    private PlayButton   mPlayButton = null;
+    //private PlayButton   mPlayButton = null;
     private MediaPlayer   mPlayer = null;
 
     private void onRecord(boolean start) {
@@ -133,22 +137,43 @@ public class RecordTestActivity extends Activity {
     @Override
     public void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-
-        LinearLayout ll = new LinearLayout(this);
-        mRecordButton = new RecordButton(this);
-        ll.addView(mRecordButton,
-            new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                0));
-        mPlayButton = new PlayButton(this);
-        ll.addView(mPlayButton,
-            new LinearLayout.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                0));
-        setContentView(ll);
+        TextView a = new TextView(this);
+        a.setText("mamepato?");
+        setContentView(a);
     }
+    
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {    	
+        int action = event.getAction();
+        int keycode = event.getKeyCode();
+            switch (keycode) 
+            {
+	            case KeyEvent.KEYCODE_VOLUME_UP:
+	                if (action == KeyEvent.ACTION_DOWN) {                	
+	                	//onRecord(mStartRecording);
+	                	if(isPlaying) {
+	                		//stop all players
+	                		stopPlaying();
+	                		isPlaying = false;
+	                		//isPlaying = false;
+	                	}
+	                    startRecording();
+
+	                	isRecording = true;
+	                    
+	                }
+	                else if (action == KeyEvent.ACTION_UP) {
+	                	stopRecording();
+	                	isRecording = false;
+	                	isPlaying = true;
+	                	startPlaying();
+	                }
+	                return true;
+	           
+	            default:
+	                return super.dispatchKeyEvent(event);
+            }            
+        }
 
     @Override
     public void onPause() {
