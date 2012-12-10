@@ -1,0 +1,9 @@
+<resources>
+
+    <string name="app_name">AndroidRecordTest</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_record_test">RecordTestActivity</string>
+    <string name="title_activity_volume_button">VolumeButtonActivity</string>
+
+</resources>
