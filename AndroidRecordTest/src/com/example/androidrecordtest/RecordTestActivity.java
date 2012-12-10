@@ -147,7 +147,7 @@ public class RecordTestActivity extends Activity {
 
     public RecordTestActivity() {
         mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
-        mFileName += "/audiorecordtest.3gp";
+        mFileName += "/audiorecordtest.arm";
     }
 
     @Override
